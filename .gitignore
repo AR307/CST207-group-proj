@@ -1,0 +1,28 @@
+# Documentation files (except README.md)
+TESTING.md
+TEST_REPORT.md
+PROJECT_FILES.md
+DELIVERABLES.md
+README_KNN.md
+
+# Project requirement document
+CST207-Group Project-202509 (1).pdf
+*.pdf
+
+# Compiled executables
+*.exe
+*.out
+
+# Temporary test files
+run_tests.bat
+test_*.bat
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+*.o
+*.obj
