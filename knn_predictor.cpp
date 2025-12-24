@@ -2,6 +2,8 @@
 #include <cmath>
 #include <algorithm>
 #include <map>
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -164,3 +166,85 @@ int KNNPredictor::getTrainingDataSize() const {
 void KNNPredictor::setK(int kValue) {
     k = kValue;
 }
+
+// ==============================================
+// File I/O Operations
+// ==============================================
+
+bool KNNPredictor::loadTrainingDataFromFile(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        return false;
+    }
+    
+    // Clear existing training data
+    trainingData.clear();
+    
+    string line;
+    // Skip header line
+    if (!getline(file, line)) {
+        file.close();
+        return false;
+    }
+    
+    // Read data lines
+    int lineCount = 0;
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string sizeStr, sortStr, uniqueStr, algorithm, datasetType;
+        
+        // Parse CSV: size,sortedness,uniqueRatio,bestAlgorithm[,datasetType]
+        // Note: datasetType is optional for backward compatibility
+        if (getline(ss, sizeStr, ',') &&
+            getline(ss, sortStr, ',') &&
+            getline(ss, uniqueStr, ',') &&
+            getline(ss, algorithm, ',')) {  // Read up to comma
+            
+            // Optional: read datasetType if present (for new format)
+            getline(ss, datasetType);  // Read rest of line
+            
+            try {
+                int size = stoi(sizeStr);
+                double sortedness = stod(sortStr);
+                double uniqueRatio = stod(uniqueStr);
+                
+                // Create and add data point
+                Features features(size, sortedness, uniqueRatio);
+                addTrainingData(features, algorithm);
+                lineCount++;
+            } catch (...) {
+                // Skip invalid lines
+                continue;
+            }
+        }
+    }
+    
+    file.close();
+    return lineCount > 0;
+}
+
+bool KNNPredictor::saveTrainingDataToFile(const string& filename) const {
+    ofstream file(filename);
+    if (!file.is_open()) {
+        return false;
+    }
+    
+    // Write header
+    file << "size,sortedness,uniqueRatio,bestAlgorithm" << endl;
+    
+    // Write each training data point
+    for (const DataPoint& dp : trainingData) {
+        file << dp.features.size << ","
+             << dp.features.sortedness << ","
+             << dp.features.uniqueRatio << ","
+             << dp.bestAlgorithm << endl;
+    }
+    
+    file.close();
+    return true;
+}
+
+void KNNPredictor::clearTrainingData() {
+    trainingData.clear();
+}
+

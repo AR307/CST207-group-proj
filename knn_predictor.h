@@ -56,8 +56,17 @@ public:
     // Add a training data point
     void addTrainingData(Features features, string bestAlgorithm);
     
-    // Load default training dataset
+    // Load default training dataset (26 hardcoded samples)
     void loadDefaultTrainingData();
+    
+    // Load training data from CSV file
+    bool loadTrainingDataFromFile(const string& filename);
+    
+    // Save current training data to CSV file
+    bool saveTrainingDataToFile(const string& filename) const;
+    
+    // Clear all training data
+    void clearTrainingData();
     
     // Predict best algorithm for given features using k-NN
     string predict(const Features& features);

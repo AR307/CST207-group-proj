@@ -91,10 +91,41 @@ int main() {
     
     // Initialize k-NN predictor
     KNNPredictor predictor(5);  // k = 5
-    predictor.loadDefaultTrainingData();
     
-    cout << "Loaded " << predictor.getTrainingDataSize() 
-         << " training samples for k-NN predictor." << endl;
+    // Ask user which training data to use
+    cout << "--- Training Data Options ---" << endl;
+    cout << "1. Use default training data (26 hardcoded samples)" << endl;
+    cout << "2. Load training data from file (recommended: ~1000 samples)" << endl;
+    cout << "\nEnter your choice: ";
+    
+    int trainingChoice;
+    cin >> trainingChoice;
+    
+    if (trainingChoice == 2) {
+        cout << "Enter training data filename (default: training_data.csv): ";
+        string filename;
+        cin.ignore(); // Clear newline from previous input
+        getline(cin, filename);
+        
+        if (filename.empty()) {
+            filename = "training_data.csv";
+        }
+        
+        cout << "Loading training data from " << filename << "..." << endl;
+        if (predictor.loadTrainingDataFromFile(filename)) {
+            cout << "Successfully loaded " << predictor.getTrainingDataSize() 
+                 << " training samples." << endl;
+        } else {
+            cout << "[WARN] Failed to load file. Using default training data." << endl;
+            predictor.loadDefaultTrainingData();
+        }
+    } else {
+        predictor.loadDefaultTrainingData();
+        cout << "Loaded " << predictor.getTrainingDataSize() 
+             << " default training samples." << endl;
+    }
+    
+    cout << endl;
     
     while (true) {
         displayMenu();
