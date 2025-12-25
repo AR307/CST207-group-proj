@@ -11,7 +11,7 @@ using namespace std;
 
 struct Features {  // Dataset characteristics for k-NN classification
     int size;           // Number of elements in this dataset
-    double sortedness;  // How sorted the data is (0-100%）
+    double sortedness;  // How sorted the data is (0-100%)
     double uniqueRatio; // Ratio of unique elements (0.0-1.0)
     
     Features(int s, double sort, double unique) 
