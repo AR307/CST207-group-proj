@@ -172,7 +172,7 @@ string findBestAlgorithm(vector<int>& dataset, bool verbose = false) {  // Test 
 
 
 int main(int argc, char* argv[]) {  // Generate training data by testing sorting algorithms
-    int samplesPerType = 500;  // 500 samples per dataset type
+    int samplesPerType = 1000;  // 1000 samples per dataset type
     string outputFile = "training_data.csv";
     
 
