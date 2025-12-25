@@ -10,13 +10,11 @@
 
 using namespace std;
 
-// Random number generator
+
 random_device rd;
 mt19937 gen(rd());
 
-// ==============================================
-// Dataset Type Enumeration
-// ==============================================
+
 
 enum DatasetType {
     TYPE_RANDOM,
@@ -37,14 +35,12 @@ const char* getTypeName(DatasetType type) {
     }
 }
 
-// ==============================================
-// Generate Dataset Using Specific Method
-// ==============================================
+
 
 vector<int> generateByType(DatasetType type, int sampleIndex, int totalSamplesPerType) {
     vector<int> dataset;
     
-    // Random number distributions
+
     uniform_int_distribution<> smallSize(10, 500);
     uniform_int_distribution<> mediumSize(100, 2000);
     uniform_int_distribution<> largeSize(500, 5000);
@@ -52,23 +48,19 @@ vector<int> generateByType(DatasetType type, int sampleIndex, int totalSamplesPe
     uniform_int_distribution<> swapsMedium(5, 50);
     uniform_int_distribution<> uniqueCount(2, 50);
     
-    switch(type) {
         case TYPE_RANDOM: {
-            // Random arrays: varying sizes
             int size;
             if (sampleIndex < totalSamplesPerType / 3) {
-                size = smallSize(gen);  // Small: 10-500
+                size = smallSize(gen);
             } else if (sampleIndex < 2 * totalSamplesPerType / 3) {
-                size = mediumSize(gen); // Medium: 100-2000
+                size = mediumSize(gen);
             } else {
-                size = largeSize(gen);  // Large: 500-5000
+                size = largeSize(gen);
             }
             dataset = generateRandom(size);
             break;
         }
-        
         case TYPE_NEARLY_SORTED: {
-            // Nearly sorted arrays: varying sizes and swap counts
             int size;
             int swaps;
             if (sampleIndex < totalSamplesPerType / 3) {
@@ -84,9 +76,7 @@ vector<int> generateByType(DatasetType type, int sampleIndex, int totalSamplesPe
             dataset = generateNearlySorted(size, swaps);
             break;
         }
-        
         case TYPE_REVERSED: {
-            // Reversed arrays: varying sizes
             int size;
             if (sampleIndex < totalSamplesPerType / 3) {
                 size = smallSize(gen);
@@ -98,28 +88,24 @@ vector<int> generateByType(DatasetType type, int sampleIndex, int totalSamplesPe
             dataset = generateReversed(size);
             break;
         }
-        
         case TYPE_FEW_UNIQUE: {
-            // Few unique elements: varying sizes and unique counts
             int size;
             int uniques;
             if (sampleIndex < totalSamplesPerType / 3) {
                 size = smallSize(gen);
-                uniques = uniqueCount(gen) / 5 + 2; // 2-12
+                uniques = uniqueCount(gen) / 5 + 2;
             } else if (sampleIndex < 2 * totalSamplesPerType / 3) {
                 size = mediumSize(gen);
-                uniques = uniqueCount(gen); // 2-50
+                uniques = uniqueCount(gen);
             } else {
                 size = largeSize(gen);
-                uniques = uniqueCount(gen) * 2; // 4-100
+                uniques = uniqueCount(gen) * 2;
             }
-            uniques = max(2, min(uniques, size)); // Ensure valid range
+            uniques = max(2, min(uniques, size));
             dataset = generateFewUnique(size, uniques);
             break;
         }
-        
         case TYPE_LARGE_RANDOM: {
-            // Large random arrays: always large sizes
             uniform_int_distribution<> veryLargeSize(1000, 10000);
             int size = veryLargeSize(gen);
             dataset = generateLargeRandom(size);
@@ -130,9 +116,7 @@ vector<int> generateByType(DatasetType type, int sampleIndex, int totalSamplesPe
     return dataset;
 }
 
-// ==============================================
-// Find Best Algorithm by Testing
-// ==============================================
+
 
 struct TestResult {
     string algorithm;
@@ -143,7 +127,7 @@ string findBestAlgorithm(vector<int>& dataset, bool verbose = false) {
     vector<TestResult> results;
     bool skipSlow = dataset.size() > 1000;
     
-    // Test each algorithm (skip slow ones for large arrays)
+
     if (!skipSlow) {
         vector<int> arr1 = dataset;
         SortResult result1 = bubbleSort(arr1);
@@ -162,7 +146,7 @@ string findBestAlgorithm(vector<int>& dataset, bool verbose = false) {
     SortResult result4 = quickSort(arr4);
     results.push_back({"Quick", result4.timeMs});
     
-    // Find fastest
+
     string fastest = results[0].algorithm;
     double minTime = results[0].timeMs;
     
@@ -184,15 +168,13 @@ string findBestAlgorithm(vector<int>& dataset, bool verbose = false) {
     return fastest;
 }
 
-// ==============================================
-// Main Training Data Generation
-// ==============================================
+
 
 int main(int argc, char* argv[]) {
     int samplesPerType = 500;  // 500 samples per dataset type
     string outputFile = "training_data.csv";
     
-    // Parse command line arguments
+
     if (argc > 1) {
         samplesPerType = atoi(argv[1]);
     }
@@ -200,7 +182,7 @@ int main(int argc, char* argv[]) {
         outputFile = argv[2];
     }
     
-    // Calculate total samples
+
     int totalDatasetTypes = 5;
     int totalSamples = samplesPerType * totalDatasetTypes;
     
@@ -220,13 +202,12 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     
-    // Write CSV header
     file << "size,sortedness,uniqueRatio,bestAlgorithm,datasetType" << endl;
     
     time_t startTime = time(nullptr);
     int totalGenerated = 0;
     
-    // Generate samples for each dataset type
+
     DatasetType types[] = {TYPE_RANDOM, TYPE_NEARLY_SORTED, TYPE_REVERSED, 
                            TYPE_FEW_UNIQUE, TYPE_LARGE_RANDOM};
     
@@ -238,18 +219,17 @@ int main(int argc, char* argv[]) {
         cout << "Generating " << samplesPerType << " samples for: " << typeName << endl;
         
         for (int i = 0; i < samplesPerType; i++) {
-            // Generate dataset using specific method
             vector<int> dataset = generateByType(currentType, i, samplesPerType);
             
-            // Extract features
+
             int actualSize = getDatasetSize(dataset);
             double actualSortedness = calculateSortedness(dataset);
             double actualUniqueRatio = calculateUniqueRatio(dataset);
             
-            // Find best algorithm by testing
+
             string bestAlgorithm = findBestAlgorithm(dataset);
             
-            // Write to CSV
+
             file << actualSize << ","
                  << fixed << setprecision(2) << actualSortedness << ","
                  << fixed << setprecision(4) << actualUniqueRatio << ","
@@ -258,7 +238,7 @@ int main(int argc, char* argv[]) {
             
             totalGenerated++;
             
-            // Progress reporting for this type
+
             if ((i + 1) % 50 == 0 || i == samplesPerType - 1) {
                 int percent = (int)((i + 1) * 100.0 / samplesPerType);
                 cout << "\r  Progress: [";

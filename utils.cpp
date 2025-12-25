@@ -5,9 +5,7 @@
 
 using namespace std;
 
-// ==============================================
-// Print Array
-// ==============================================
+
 
 void printArray(const vector<int>& arr, int maxElements) {
     if (arr.empty()) {
@@ -29,17 +27,13 @@ void printArray(const vector<int>& arr, int maxElements) {
     cout << "]" << endl;
 }
 
-// ==============================================
-// Copy Array
-// ==============================================
+
 
 vector<int> copyArray(const vector<int>& arr) {
     return vector<int>(arr);
 }
 
-// ==============================================
-// Check if Sorted
-// ==============================================
+
 
 bool isSorted(const vector<int>& arr) {
     for (size_t i = 0; i < arr.size() - 1; i++) {

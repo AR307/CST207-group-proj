@@ -9,9 +9,7 @@
 
 using namespace std;
 
-// ==============================================
-// Display Functions
-// ==============================================
+
 
 void displayHeader() {
     cout << "\n========================================" << endl;
@@ -66,13 +64,12 @@ void displayResults(const vector<SortResult>& results, const string& prediction)
              << right << setw(15) << result.comparisons
              << setw(15) << fixed << setprecision(3) << result.timeMs;
         
-        // Mark predicted and fastest
         string predicted = (prediction + " Sort" == result.algorithmName) ? "[YES]" : "";
         string fastest = (result.algorithmName == fastestAlgo) ? " [FASTEST]" : "";
         cout << setw(12) << predicted << fastest << endl;
     }
     
-    // Validation
+
     cout << "\n--- Prediction Validation ---" << endl;
     if (prediction + " Sort" == fastestAlgo) {
         cout << "  [OK] k-NN prediction is CORRECT! Predicted the fastest algorithm." << endl;
@@ -82,17 +79,13 @@ void displayResults(const vector<SortResult>& results, const string& prediction)
     }
 }
 
-// ==============================================
-// Main Program
-// ==============================================
+
 
 int main() {
     displayHeader();
     
-    // Initialize k-NN predictor
-    KNNPredictor predictor(5);  // k = 5
+    KNNPredictor predictor(5);
     
-    // Ask user which training data to use
     cout << "--- Training Data Options ---" << endl;
     cout << "1. Use default training data (26 hardcoded samples)" << endl;
     cout << "2. Load training data from file (recommended: ~1000 samples)" << endl;
@@ -104,7 +97,7 @@ int main() {
     if (trainingChoice == 2) {
         cout << "Enter training data filename (default: training_data.csv): ";
         string filename;
-        cin.ignore(); // Clear newline from previous input
+        cin.ignore();
         getline(cin, filename);
         
         if (filename.empty()) {
@@ -141,7 +134,7 @@ int main() {
         vector<int> dataset;
         int size, swaps, uniqueCount;
         
-        // Generate dataset based on user choice
+
         switch (choice) {
             case 1:
                 cout << "Enter array size: ";
@@ -189,13 +182,13 @@ int main() {
                 continue;
         }
         
-        // Display sample of array (for small datasets)
+
         if (dataset.size() <= 100) {
             cout << "\nArray contents: ";
             printArray(dataset, 20);
         }
         
-        // Extract features
+
         Features features(
             getDatasetSize(dataset),
             calculateSortedness(dataset),
@@ -204,14 +197,14 @@ int main() {
         
         displayFeatures(features);
         
-        // Use k-NN to predict best algorithm
+
         string prediction = predictor.predict(features);
         displayPrediction(prediction);
         
-        // Test all sorting algorithms
+
         vector<SortResult> results;
         
-        // Skip bubble and insertion for very large arrays
+
         bool skipSlow = dataset.size() > 1000;
         
         if (!skipSlow) {
@@ -234,7 +227,7 @@ int main() {
         vector<int> arr4 = copyArray(dataset);
         results.push_back(quickSort(arr4));
         
-        // Display results
+
         displayResults(results, prediction);
     }
     

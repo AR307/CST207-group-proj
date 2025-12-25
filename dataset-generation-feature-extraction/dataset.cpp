@@ -5,9 +5,7 @@
 
 using namespace std;
 
-// ==============================================
-// Data Generation Functions
-// ==============================================
+
 
 vector<int> generateRandom(int n) {
     vector<int> arr(n);
@@ -24,12 +22,11 @@ vector<int> generateRandom(int n) {
 vector<int> generateNearlySorted(int n, int swaps) {
     vector<int> arr(n);
     
-    // Create sorted array
     for (int i = 0; i < n; i++) {
         arr[i] = i + 1;
     }
     
-    // Do random swaps
+
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<> dis(0, n - 1);
@@ -75,9 +72,7 @@ vector<int> generateLargeRandom(int n) {
     return arr;
 }
 
-// ==============================================
-// Feature Extraction Functions
-// ==============================================
+
 
 int getDatasetSize(vector<int>& arr) {
     return arr.size();

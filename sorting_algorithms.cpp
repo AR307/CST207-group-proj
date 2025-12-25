@@ -5,15 +5,12 @@
 using namespace std;
 using namespace chrono;
 
-// ==============================================
-// Helper Functions for Merge Sort
-// ==============================================
+
 
 void merge(vector<int>& arr, int left, int mid, int right, long long& comparisons) {
     int n1 = mid - left + 1;
     int n2 = right - mid;
     
-    // Create temp arrays
     vector<int> L(n1), R(n2);
     
     for (int i = 0; i < n1; i++)
@@ -21,7 +18,7 @@ void merge(vector<int>& arr, int left, int mid, int right, long long& comparison
     for (int j = 0; j < n2; j++)
         R[j] = arr[mid + 1 + j];
     
-    // Merge temp arrays back
+
     int i = 0, j = 0, k = left;
     
     while (i < n1 && j < n2) {
@@ -36,7 +33,7 @@ void merge(vector<int>& arr, int left, int mid, int right, long long& comparison
         k++;
     }
     
-    // Copy remaining elements
+
     while (i < n1) {
         arr[k] = L[i];
         i++;
@@ -60,9 +57,7 @@ void mergeSortHelper(vector<int>& arr, int left, int right, long long& compariso
     }
 }
 
-// ==============================================
-// Helper Functions for Quick Sort
-// ==============================================
+
 
 int partition(vector<int>& arr, int low, int high, long long& comparisons) {
     int pivot = arr[high];
@@ -87,9 +82,7 @@ void quickSortHelper(vector<int>& arr, int low, int high, long long& comparisons
     }
 }
 
-// ==============================================
-// Bubble Sort Implementation
-// ==============================================
+
 
 SortResult bubbleSort(vector<int>& arr) {
     auto start = high_resolution_clock::now();
@@ -105,7 +98,6 @@ SortResult bubbleSort(vector<int>& arr) {
                 swapped = true;
             }
         }
-        // Optimization: break if no swaps occurred
         if (!swapped) break;
     }
     
@@ -115,9 +107,7 @@ SortResult bubbleSort(vector<int>& arr) {
     return SortResult("Bubble Sort", comparisons, timeMs);
 }
 
-// ==============================================
-// Insertion Sort Implementation
-// ==============================================
+
 
 SortResult insertionSort(vector<int>& arr) {
     auto start = high_resolution_clock::now();
@@ -146,9 +136,7 @@ SortResult insertionSort(vector<int>& arr) {
     return SortResult("Insertion Sort", comparisons, timeMs);
 }
 
-// ==============================================
-// Merge Sort Implementation
-// ==============================================
+
 
 SortResult mergeSort(vector<int>& arr) {
     auto start = high_resolution_clock::now();
@@ -164,9 +152,7 @@ SortResult mergeSort(vector<int>& arr) {
     return SortResult("Merge Sort", comparisons, timeMs);
 }
 
-// ==============================================
-// Quick Sort Implementation
-// ==============================================
+
 
 SortResult quickSort(vector<int>& arr) {
     auto start = high_resolution_clock::now();
