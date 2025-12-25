@@ -5,8 +5,8 @@
 #include <random>
 #include <iomanip>
 #include <ctime>
-#include "dataset-generation-feature-extraction/dataset.h"
-#include "sorting_algorithms.h"
+#include "../include/dataset.h"
+#include "../include/sorting_algorithms.h"
 
 using namespace std;
 
@@ -37,7 +37,7 @@ const char* getTypeName(DatasetType type) {
 
 
 
-vector<int> generateByType(DatasetType type, int sampleIndex, int totalSamplesPerType) {
+vector<int> generateByType(DatasetType type, int sampleIndex, int totalSamplesPerType) {  // Generate dataset based on type with varying parameters
     vector<int> dataset;
     
 
@@ -48,6 +48,7 @@ vector<int> generateByType(DatasetType type, int sampleIndex, int totalSamplesPe
     uniform_int_distribution<> swapsMedium(5, 50);
     uniform_int_distribution<> uniqueCount(2, 50);
     
+    switch(type) {
         case TYPE_RANDOM: {
             int size;
             if (sampleIndex < totalSamplesPerType / 3) {
@@ -123,7 +124,7 @@ struct TestResult {
     double timeMs;
 };
 
-string findBestAlgorithm(vector<int>& dataset, bool verbose = false) {
+string findBestAlgorithm(vector<int>& dataset, bool verbose = false) {  // Test all algorithms and return fastest
     vector<TestResult> results;
     bool skipSlow = dataset.size() > 1000;
     
@@ -170,7 +171,7 @@ string findBestAlgorithm(vector<int>& dataset, bool verbose = false) {
 
 
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {  // Generate training data by testing sorting algorithms
     int samplesPerType = 500;  // 500 samples per dataset type
     string outputFile = "training_data.csv";
     
@@ -253,7 +254,7 @@ int main(int argc, char* argv[]) {
                 cout.flush();
             }
         }
-        cout << " ✓" << endl;
+        cout << " [OK]" << endl;
     }
     
     file.close();

@@ -1,4 +1,4 @@
-#include "sorting_algorithms.h"
+#include "../include/sorting_algorithms.h"
 #include <chrono>
 #include <algorithm>
 
@@ -7,20 +7,24 @@ using namespace chrono;
 
 
 
-void merge(vector<int>& arr, int left, int mid, int right, long long& comparisons) {
+void merge(vector<int>& arr, int left, int mid, int right, long long& comparisons) {  // Merge two sorted subarrays
+    // Calculate sizes of two subarrays to be merged
     int n1 = mid - left + 1;
     int n2 = right - mid;
     
+    // Create temporary arrays for left and right subarrays
     vector<int> L(n1), R(n2);
     
+    // Copy data to temporary arrays
     for (int i = 0; i < n1; i++)
         L[i] = arr[left + i];
     for (int j = 0; j < n2; j++)
         R[j] = arr[mid + 1 + j];
     
-
+    // Merge the temporary arrays back into arr[left..right]
     int i = 0, j = 0, k = left;
     
+    // Compare elements from both arrays and place smaller one in result
     while (i < n1 && j < n2) {
         comparisons++;
         if (L[i] <= R[j]) {
@@ -33,13 +37,14 @@ void merge(vector<int>& arr, int left, int mid, int right, long long& comparison
         k++;
     }
     
-
+    // Copy any remaining elements from left array
     while (i < n1) {
         arr[k] = L[i];
         i++;
         k++;
     }
     
+    // Copy any remaining elements from right array
     while (j < n2) {
         arr[k] = R[j];
         j++;
@@ -47,7 +52,7 @@ void merge(vector<int>& arr, int left, int mid, int right, long long& comparison
     }
 }
 
-void mergeSortHelper(vector<int>& arr, int left, int right, long long& comparisons) {
+void mergeSortHelper(vector<int>& arr, int left, int right, long long& comparisons) {  // Recursive merge sort implementation
     if (left < right) {
         int mid = left + (right - left) / 2;
         
@@ -59,10 +64,11 @@ void mergeSortHelper(vector<int>& arr, int left, int right, long long& compariso
 
 
 
-int partition(vector<int>& arr, int low, int high, long long& comparisons) {
-    int pivot = arr[high];
-    int i = low - 1;
+int partition(vector<int>& arr, int low, int high, long long& comparisons) {  // Partition array for quicksort
+    int pivot = arr[high];  // Choose rightmost element as pivot
+    int i = low - 1;  // Index of smaller element
     
+    // Move elements smaller than pivot to left side
     for (int j = low; j < high; j++) {
         comparisons++;
         if (arr[j] < pivot) {
@@ -70,11 +76,12 @@ int partition(vector<int>& arr, int low, int high, long long& comparisons) {
             swap(arr[i], arr[j]);
         }
     }
+    // Place pivot in correct position
     swap(arr[i + 1], arr[high]);
     return i + 1;
 }
 
-void quickSortHelper(vector<int>& arr, int low, int high, long long& comparisons) {
+void quickSortHelper(vector<int>& arr, int low, int high, long long& comparisons) {  // Recursive quicksort implementation
     if (low < high) {
         int pi = partition(arr, low, high, comparisons);
         quickSortHelper(arr, low, pi - 1, comparisons);
@@ -84,13 +91,14 @@ void quickSortHelper(vector<int>& arr, int low, int high, long long& comparisons
 
 
 
-SortResult bubbleSort(vector<int>& arr) {
+SortResult bubbleSort(vector<int>& arr) {  // Bubble sort with optimization
     auto start = high_resolution_clock::now();
     long long comparisons = 0;
     
     int n = arr.size();
     for (int i = 0; i < n - 1; i++) {
-        bool swapped = false;
+        bool swapped = false;  // Track if any swaps occurred
+        // Compare adjacent elements and swap if needed
         for (int j = 0; j < n - i - 1; j++) {
             comparisons++;
             if (arr[j] > arr[j + 1]) {
@@ -98,6 +106,7 @@ SortResult bubbleSort(vector<int>& arr) {
                 swapped = true;
             }
         }
+        // Early termination: if no swaps, array is sorted
         if (!swapped) break;
     }
     
@@ -109,7 +118,7 @@ SortResult bubbleSort(vector<int>& arr) {
 
 
 
-SortResult insertionSort(vector<int>& arr) {
+SortResult insertionSort(vector<int>& arr) {  // Insertion sort implementation
     auto start = high_resolution_clock::now();
     long long comparisons = 0;
     
@@ -138,7 +147,7 @@ SortResult insertionSort(vector<int>& arr) {
 
 
 
-SortResult mergeSort(vector<int>& arr) {
+SortResult mergeSort(vector<int>& arr) {  // Merge sort driver function
     auto start = high_resolution_clock::now();
     long long comparisons = 0;
     
@@ -154,7 +163,7 @@ SortResult mergeSort(vector<int>& arr) {
 
 
 
-SortResult quickSort(vector<int>& arr) {
+SortResult quickSort(vector<int>& arr) {  // Quicksort driver function
     auto start = high_resolution_clock::now();
     long long comparisons = 0;
     

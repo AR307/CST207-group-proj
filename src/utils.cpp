@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "../include/utils.h"
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
@@ -7,7 +7,7 @@ using namespace std;
 
 
 
-void printArray(const vector<int>& arr, int maxElements) {
+void printArray(const vector<int>& arr, int maxElements) {  // Display array with element limit
     if (arr.empty()) {
         cout << "(empty array)" << endl;
         return;
@@ -29,13 +29,13 @@ void printArray(const vector<int>& arr, int maxElements) {
 
 
 
-vector<int> copyArray(const vector<int>& arr) {
+vector<int> copyArray(const vector<int>& arr) {  // Create independent copy
     return vector<int>(arr);
 }
 
 
 
-bool isSorted(const vector<int>& arr) {
+bool isSorted(const vector<int>& arr) {  // Check ascending order
     for (size_t i = 0; i < arr.size() - 1; i++) {
         if (arr[i] > arr[i + 1]) {
             return false;

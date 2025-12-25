@@ -1,4 +1,4 @@
-#include "knn_predictor.h"
+#include "../include/knn_predictor.h"
 #include <cmath>
 #include <algorithm>
 #include <map>
@@ -9,20 +9,23 @@ using namespace std;
 
 
 
-KNNPredictor::KNNPredictor(int kValue) : k(kValue) {}
+KNNPredictor::KNNPredictor(int kValue) : k(kValue) {}  // Initialize with k neighbors
 
 
 
-double KNNPredictor::euclideanDistance(const Features& f1, const Features& f2) {
-    
+double KNNPredictor::euclideanDistance(const Features& f1, const Features& f2) {  // Calculate normalized Euclidean distance
+    // Normalize all features to [0, 1] range for fair comparison
+    // Size: divide by 10000 (typical max dataset size)
     double sizeNorm1 = f1.size / 10000.0;
     double sizeNorm2 = f2.size / 10000.0;
+    // Sortedness: already in 0-100%, convert to 0-1
     double sortNorm1 = f1.sortedness / 100.0;
     double sortNorm2 = f2.sortedness / 100.0;
+    // UniqueRatio: already in 0-1 range
     double uniqueNorm1 = f1.uniqueRatio;
     double uniqueNorm2 = f2.uniqueRatio;
     
-
+    // Calculate Euclidean distance: sqrt(sum of squared differences)
     double sizeDiff = sizeNorm1 - sizeNorm2;
     double sortDiff = sortNorm1 - sortNorm2;
     double uniqueDiff = uniqueNorm1 - uniqueNorm2;
@@ -32,11 +35,11 @@ double KNNPredictor::euclideanDistance(const Features& f1, const Features& f2) {
 
 
 
-void KNNPredictor::addTrainingData(Features features, string bestAlgorithm) {
+void KNNPredictor::addTrainingData(Features features, string bestAlgorithm) {  // Add sample to training set
     trainingData.push_back(DataPoint(features, bestAlgorithm));
 }
 
-void KNNPredictor::loadDefaultTrainingData() {
+void KNNPredictor::loadDefaultTrainingData() {  // Load 26 pre-defined training samples
     trainingData.clear();
     
 
@@ -87,35 +90,35 @@ void KNNPredictor::loadDefaultTrainingData() {
 
 
 
-string KNNPredictor::predict(const Features& features) {
+string KNNPredictor::predict(const Features& features) {  // Predict using k nearest neighbors voting
     if (trainingData.empty()) {
-        return "Quick";
+        return "Quick";  // Default fallback if no training data
     }
     
-
+    // Step 1: Calculate distance to all training points
     vector<Neighbor> neighbors;
     for (const DataPoint& dp : trainingData) {
         double dist = euclideanDistance(features, dp.features);
         neighbors.push_back(Neighbor(dist, dp.bestAlgorithm));
     }
     
-
+    // Step 2: Sort by distance (ascending) to find nearest neighbors
     sort(neighbors.begin(), neighbors.end(), 
          [](const Neighbor& a, const Neighbor& b) {
              return a.distance < b.distance;
          });
     
-
+    // Step 3: Consider only k nearest neighbors
     int consideredK = min(k, (int)neighbors.size());
     
-
+    // Step 4: Vote - count algorithm occurrences in k nearest neighbors
     map<string, int> votes;
     for (int i = 0; i < consideredK; i++) {
         votes[neighbors[i].algorithm]++;
     }
     
-
-    string bestAlgorithm = "Quick";
+    // Step 5: Return algorithm with most votes (majority voting)
+    string bestAlgorithm = "Quick";  // Default
     int maxVotes = 0;
     for (const auto& pair : votes) {
         if (pair.second > maxVotes) {
@@ -129,17 +132,17 @@ string KNNPredictor::predict(const Features& features) {
 
 
 
-int KNNPredictor::getTrainingDataSize() const {
+int KNNPredictor::getTrainingDataSize() const {  // Return number of training samples
     return trainingData.size();
 }
 
-void KNNPredictor::setK(int kValue) {
+void KNNPredictor::setK(int kValue) {  // Update k value
     k = kValue;
 }
 
 
 
-bool KNNPredictor::loadTrainingDataFromFile(const string& filename) {
+bool KNNPredictor::loadTrainingDataFromFile(const string& filename) {  // Load training data from CSV file
     ifstream file(filename);
     if (!file.is_open()) {
         return false;
@@ -186,7 +189,7 @@ bool KNNPredictor::loadTrainingDataFromFile(const string& filename) {
     return lineCount > 0;
 }
 
-bool KNNPredictor::saveTrainingDataToFile(const string& filename) const {
+bool KNNPredictor::saveTrainingDataToFile(const string& filename) const {  // Save training data to CSV file
     ofstream file(filename);
     if (!file.is_open()) {
         return false;
@@ -205,7 +208,7 @@ bool KNNPredictor::saveTrainingDataToFile(const string& filename) const {
     return true;
 }
 
-void KNNPredictor::clearTrainingData() {
+void KNNPredictor::clearTrainingData() {  // Remove all training samples
     trainingData.clear();
 }
 

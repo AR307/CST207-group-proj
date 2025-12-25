@@ -2,23 +2,23 @@
 #include <iomanip>
 #include <vector>
 #include <string>
-#include "dataset-generation-feature-extraction/dataset.h"
-#include "knn_predictor.h"
-#include "sorting_algorithms.h"
-#include "utils.h"
+#include "../include/dataset.h"
+#include "../include/knn_predictor.h"
+#include "../include/sorting_algorithms.h"
+#include "../include/utils.h"
 
 using namespace std;
 
 
 
-void displayHeader() {
+void displayHeader() {  // Display program welcome banner
     cout << "\n========================================" << endl;
     cout << "  AI-Driven Sorting Algorithm Optimizer" << endl;
     cout << "  Using k-NN Algorithm for Prediction" << endl;
     cout << "========================================\n" << endl;
 }
 
-void displayMenu() {
+void displayMenu() {  // Display dataset generation menu options
     cout << "\n--- Dataset Generation Options ---" << endl;
     cout << "1. Random Array" << endl;
     cout << "2. Nearly Sorted Array" << endl;
@@ -29,19 +29,19 @@ void displayMenu() {
     cout << "\nEnter your choice: ";
 }
 
-void displayFeatures(const Features& features) {
+void displayFeatures(const Features& features) {  // Display extracted dataset features
     cout << "\n--- Dataset Features ---" << endl;
     cout << "  Size:          " << features.size << " elements" << endl;
     cout << "  Sortedness:    " << fixed << setprecision(2) << features.sortedness << "%" << endl;
     cout << "  Unique Ratio:  " << fixed << setprecision(4) << features.uniqueRatio << endl;
 }
 
-void displayPrediction(const string& prediction) {
+void displayPrediction(const string& prediction) {  // Display k-NN prediction result
     cout << "\n--- k-NN Prediction ---" << endl;
     cout << "  Predicted Best Algorithm: " << prediction << " Sort" << endl;
 }
 
-void displayResults(const vector<SortResult>& results, const string& prediction) {
+void displayResults(const vector<SortResult>& results, const string& prediction) {  // Display sorting performance comparison table
     cout << "\n--- Sorting Performance Results ---" << endl;
     cout << left << setw(18) << "Algorithm" 
          << right << setw(15) << "Comparisons" 
@@ -81,7 +81,7 @@ void displayResults(const vector<SortResult>& results, const string& prediction)
 
 
 
-int main() {
+int main() {  // Main program entry point
     displayHeader();
     
     KNNPredictor predictor(5);
